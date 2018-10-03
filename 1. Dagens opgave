@@ -1,0 +1,31 @@
+# 1. Solr Cloud
+
+I dag skal i sætte en solr cloud server op. Det vil sige at i skal have flere solr-servere til at snakke sammen, så data i sender til en server også kan læses på en anden server.
+
+For at kunne få flere solr servere til at snakke sammen i "cloud mode" kræves en ekstra server som kører noget der hedder zookeeper. Zookeeper opbevarer solrs konfigurations-filer, så alle servere har den samme konfiguration.
+
+## 1.1 Zookeeper
+Start med at starte en ny server og installere java på den. Brug guiden fra sidste uge https://github.com/Distribuerede-Systemer-2018/aws-intro/blob/master/server-setup.md hvis du er i tvivl.
+
+Zookeeper kører på port 2181, så sørg for at der er åbent for den i serverens security group. I kan enten tillade adgang fra alle IPer (`0.0.0.0/32` eller fra Solr serverens security group):
+![image](https://user-images.githubusercontent.com/1210224/46413913-4d083880-c722-11e8-801b-a80b1538814e.png)
+
+Derefter følger i den officielle zookeeper guide for at starte en zookeeper instans. I behøver kun at læse afsnittet "Standalone Operation"
+https://zookeeper.apache.org/doc/r3.3.3/zookeeperStarted.html#sc_InstallingSingleMode
+
+## 1.2 Solr cloud
+Til at sætte den første solr server op kan i bruge den instans i arbejdede med sidste gang. Hvis i var nogle dygtige elever og huskede at slukke instansen sidste gang, så tænd den og SSH ind. Hvis i var knap skal i først stoppe den server i startede sidst - Vi skal nemlig starte den lidt anderledes for at start i cloud mode. Her er et eksempel på hvordan jeg stopper en solr server:
+![peek 2018-10-03 15-52](https://user-images.githubusercontent.com/1210224/46414871-5a262700-c724-11e8-95f7-462d4312192b.gif)
+
+Jeg kører følgende kommandoer:
+```bash
+ssh -i [pem fil] ec2-user@[ip]# For at komme ind på serveren
+pwd # Står for print working directory - Jeg kan se jeg er i /home/ec2-user
+ls # Viser mig filerne i mappen. Der ligger en solr-7.5.0 mappe (blå) og en solr-7.5.0.tgz fil (rød)
+cd solr-7.5.0 # Change directory til solr mappen. Jeg bruger TAB til at auto-complete mappe-navnet
+ls # for at se hvilke filer der er i den mappe
+ls bin # for at se hvilke filer der er i bin mappen
+# I bin mappen ligger solr filen, og da den er grøn ved jeg at det er et program som jeg kan køre. Derfor
+bin/solr stop
+```
+
